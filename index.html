@@ -1,0 +1,1696 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#00a83b">
+  <title>TGSRTC | Electric Bus Fleet</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+    :root {
+      --paper: #f4f1eb;
+      --ink: #1d282b;
+      --muted: #697477;
+      --line: #d9d7d0;
+      --green: #00a83b;
+      --green-dark: #073f24;
+      --orange: #00c83c;
+      --white: #fffefa;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    html {
+      scroll-behavior: smooth
+    }
+
+    body {
+      margin: 0;
+      background: var(--paper);
+      color: var(--ink);
+      font-family: "DM Sans", Arial, sans-serif
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none
+    }
+
+    .topline {
+      height: 7px;
+      background: var(--green)
+    }
+
+    .reading-progress {
+      position: fixed;
+      z-index: 20;
+      inset: 0 auto auto 0;
+      width: 0;
+      height: 3px;
+      background: #00c83c;
+      box-shadow: 0 0 14px #00c83c88;
+      pointer-events: none
+    }
+
+    .nav {
+      max-width: 1380px;
+      margin: auto;
+      padding: 24px 6vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center
+    }
+
+    .identity {
+      display: flex;
+      align-items: center;
+      gap: 13px
+    }
+
+    .identity-logo {
+      width: 52px;
+      height: 52px;
+      object-fit: contain;
+      flex: 0 0 auto
+    }
+
+    .identity-copy {
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .13em
+    }
+
+    .identity-copy small {
+      display: block;
+      margin-top: 3px;
+      color: var(--muted);
+      font-size: 9px;
+      letter-spacing: .19em;
+      font-weight: 600
+    }
+
+    .navlinks {
+      display: flex;
+      gap: 28px;
+      color: #596566;
+      font-size: 12px;
+      font-weight: 600
+    }
+
+    .navlinks a:hover {
+      color: var(--green)
+    }
+
+    .navlinks a {
+      transition: color .2s ease
+    }
+
+    .navlinks a.active {
+      color: var(--green-dark)
+    }
+
+    .hero {
+      position: relative;
+      max-width: none;
+      min-height: min(760px, calc(100vh - 92px));
+      margin: 0;
+      padding: 0 6vw;
+      display: block;
+      overflow: hidden;
+      background: #09291a;
+      color: white
+    }
+
+    .hero > div:first-child {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+      width: 100%;
+      max-width: 1380px;
+      min-height: inherit;
+      margin: auto;
+      padding: 68px 0
+    }
+
+    .hero .kicker,
+    .hero h1,
+    .hero-copy,
+    .hero-stat,
+    .hero-actions,
+    .hero-meta {
+      animation: route-copy-arrive .78s both cubic-bezier(.16, 1, .3, 1)
+    }
+
+    .hero .kicker { animation-delay: .42s }
+    .hero h1 { animation-delay: .58s }
+    .hero-copy { animation-delay: .74s }
+    .hero-stat { animation-delay: .9s }
+    .hero-actions { animation-delay: 1.08s }
+    .hero-meta { animation-delay: 1.22s }
+
+    .kicker {
+      font-size: 10px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--green);
+      font-weight: 800
+    }
+
+    .hero .kicker {
+      color: #a9efb9
+    }
+
+    .hero h1 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(52px, 7vw, 100px);
+      line-height: .92;
+      letter-spacing: -.055em;
+      margin: 20px 0 24px;
+      max-width: 760px;
+      color: white
+    }
+
+    .hero h1 em {
+      font-weight: 400;
+      color: #8fe0a5;
+      font-style: italic
+    }
+
+    .hero-copy {
+      max-width: 490px;
+      color: rgba(255, 255, 255, .82);
+      font-size: 15px;
+      line-height: 1.8
+    }
+
+    .hero-stat {
+      max-width: 480px;
+      margin-top: 30px;
+      padding: 20px 22px;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0 20px;
+      align-items: center;
+      background: rgba(5, 37, 21, .68);
+      border: 1px solid rgba(255, 255, 255, .28);
+      box-shadow: 0 14px 35px rgba(0, 0, 0, .15);
+      backdrop-filter: blur(12px)
+    }
+
+    .hero-stat-number {
+      grid-row: span 2;
+      color: white;
+      font-family: var(--serif);
+      font-size: clamp(48px, 6vw, 72px);
+      line-height: .9;
+      letter-spacing: -.06em;
+      font-variant-numeric: tabular-nums
+    }
+
+    .hero-stat-label {
+      color: white;
+      font-size: 13px;
+      font-weight: 700
+    }
+
+    .hero-stat-label span {
+      display: block;
+      margin-top: 5px;
+      color: rgba(255, 255, 255, .72);
+      font-size: 11px;
+      font-weight: 500
+    }
+
+    .fleet-share {
+      grid-column: 2;
+      height: 4px;
+      margin-top: 14px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, .24)
+    }
+
+    .fleet-share span {
+      display: block;
+      width: 16.59%;
+      height: 100%;
+      background: #8fe0a5;
+      transform-origin: left;
+      animation: bar-grow 1.2s .35s both cubic-bezier(.2, .75, .25, 1)
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 34px;
+      margin-top: 38px;
+      padding-top: 22px;
+      border-top: 1px solid rgba(255, 255, 255, .32)
+    }
+
+    .meta-label {
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .16em;
+      color: rgba(255, 255, 255, .62);
+      font-weight: 700
+    }
+
+    .meta-value {
+      display: block;
+      margin-top: 6px;
+      font-size: 13px;
+      font-weight: 700;
+      color: white
+    }
+
+    .hero-visual {
+      position: absolute;
+      z-index: 0;
+      inset: 0;
+      min-height: 0;
+      overflow: hidden;
+      background: #09291a
+    }
+
+    .hero-visual:before {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(3, 21, 12, .94) 0%, rgba(3, 21, 12, .78) 38%, rgba(3, 21, 12, .33) 72%, rgba(3, 21, 12, .18) 100%);
+      pointer-events: none
+    }
+
+    .hero-visual img {
+      width: 100%;
+      height: 100%;
+      min-height: 0;
+      object-fit: cover;
+      object-position: center 48%;
+      display: block;
+      animation: route-photo-unfold 1.7s .08s both cubic-bezier(.16, 1, .3, 1);
+      transition: opacity .45s ease
+    }
+
+    .hero-visual img.is-fading {
+      opacity: 0
+    }
+
+    .hero-route {
+      position: absolute;
+      z-index: 1;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none
+    }
+
+    .hero-route-line {
+      fill: none;
+      stroke: #b9f486;
+      stroke-width: 3;
+      stroke-linecap: round;
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      filter: drop-shadow(0 0 7px rgba(185, 244, 134, .8));
+      animation: route-trace 1.35s .36s both cubic-bezier(.3, .7, .2, 1)
+    }
+
+    .hero-route-station {
+      fill: #b9f486;
+      stroke: rgba(185, 244, 134, .42);
+      stroke-width: 9;
+      paint-order: stroke;
+      opacity: 0;
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: station-arrive .38s both cubic-bezier(.16, 1, .3, 1)
+    }
+
+    .hero-route-station:nth-child(1) { animation-delay: .82s }
+    .hero-route-station:nth-child(2) { animation-delay: 1.02s }
+    .hero-route-station:nth-child(3) { animation-delay: 1.22s }
+    .hero-route-station:nth-child(4) { animation-delay: 1.42s }
+    .hero-route-station:last-child { animation-delay: 1.62s }
+
+    .hero-stat-number {
+      animation: fleet-number-arrive .7s .98s both cubic-bezier(.16, 1, .3, 1)
+    }
+
+    .hero-visual:after {
+      content: "";
+      position: absolute;
+      z-index: 1;
+      inset: 62% 0 0;
+      background: linear-gradient(transparent, rgba(3, 21, 12, .46));
+      pointer-events: none
+    }
+
+    .visual-caption {
+      position: absolute;
+      z-index: 2;
+      right: clamp(22px, 6vw, 82px);
+      bottom: 30px;
+      color: rgba(255, 255, 255, .88);
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      margin-top: 25px
+    }
+
+    .hero-link {
+      min-height: 44px;
+      padding: 0 17px;
+      display: inline-flex;
+      align-items: center;
+      gap: 15px;
+      border: 1px solid #a9efb9;
+      background: #a9efb9;
+      color: #073f24;
+      font-size: 11px;
+      font-weight: 800;
+      transition: background .2s ease, color .2s ease, transform .2s ease
+    }
+
+    .hero-link:hover {
+      transform: translateY(-2px);
+      background: #d3f7db
+    }
+
+    .hero-link.secondary {
+      border-color: rgba(255, 255, 255, .56);
+      background: rgba(4, 25, 14, .2);
+      color: white
+    }
+
+    .hero-link.secondary:hover {
+      background: rgba(255, 255, 255, .14)
+    }
+
+    .hero-photo-controls {
+      position: absolute;
+      z-index: 3;
+      right: clamp(22px, 6vw, 82px);
+      bottom: 68px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: white;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .hero-photo-controls[hidden] {
+      display: none
+    }
+
+    .hero-photo-controls .carousel-button {
+      width: 34px;
+      height: 34px;
+      background: rgba(4, 25, 14, .68)
+    }
+
+    .hero-photo-controls .carousel-button:hover:not(:disabled) {
+      background: var(--green)
+    }
+
+    .section-head {
+      max-width: 1380px;
+      margin: auto;
+      padding: 44px 6vw 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 30px
+    }
+
+    .section-head h2 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(36px, 4vw, 58px);
+      letter-spacing: -.04em;
+      margin: 10px 0 0
+    }
+
+    .section-intro {
+      max-width: 360px;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.7
+    }
+
+    .fleet {
+      max-width: 1380px;
+      margin: auto;
+      padding: 0 6vw 90px
+    }
+
+    .bus-entry {
+      position: relative;
+      margin: 22px 0 38px;
+      min-height: 650px;
+      aspect-ratio: 16/9;
+      background: #17251f;
+      overflow: hidden;
+      box-shadow: 0 16px 42px rgba(36, 48, 44, .12)
+    }
+
+    .bus-carousel {
+      position: absolute;
+      inset: 0;
+      overflow: hidden
+    }
+
+    .bus-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity .65s ease;
+      pointer-events: none
+    }
+
+    .bus-slide.is-active {
+      opacity: 1;
+      pointer-events: auto
+    }
+
+    .bus-slide img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      inset: 0;
+      object-fit: cover;
+      object-position: center;
+      background: #dfe6df;
+      display: block;
+      transform: scale(1.025);
+      transition: transform 5s ease
+    }
+
+    .bus-slide.is-active img {
+      transform: scale(1)
+    }
+
+    .bus-carousel:after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, rgba(5, 15, 10, .03) 24%, rgba(5, 15, 10, .2) 43%, rgba(5, 15, 10, .78) 65%, rgba(5, 15, 10, .97) 100%);
+      pointer-events: none
+    }
+
+    .image-index {
+      position: absolute;
+      top: 30px;
+      left: 34px;
+      z-index: 2;
+      color: white;
+      font-size: 10px;
+      letter-spacing: .16em;
+      font-weight: 700;
+      text-shadow: 0 1px 8px #0008
+    }
+
+    .image-title {
+      position: absolute;
+      z-index: 2;
+      top: 50%;
+      right: clamp(28px, 4vw, 58px);
+      width: min(45%, 530px);
+      max-height: calc(100% - 64px);
+      overflow-y: auto;
+      padding: 18px 0 18px 30px;
+      color: white;
+      transform: translateY(-50%);
+      scrollbar-width: thin;
+      scrollbar-color: #ffffff70 transparent
+    }
+
+    .image-title small {
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: #b8f0c4;
+      font-weight: 800
+    }
+
+    .image-title h3 {
+      font-family: var(--serif);
+      font-weight: 400;
+      font-size: clamp(30px, 4vw, 54px);
+      line-height: 1.02;
+      margin: 8px 0 0;
+      letter-spacing: -.035em
+    }
+
+    .image-title .bus-summary {
+      max-width: 520px;
+      margin: 10px 0 18px;
+      color: rgba(255, 255, 255, .82);
+      font-size: 13px;
+      line-height: 1.65
+    }
+
+    .info-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      align-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(255, 255, 255, .28);
+      margin-bottom: 16px
+    }
+
+    .info-type {
+      color: #8fe0a5;
+      font-size: 9px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: .18em
+    }
+
+    .model-no {
+      color: rgba(255, 255, 255, .65);
+      font-size: 10px;
+      letter-spacing: .1em
+    }
+
+    .specs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px 20px
+    }
+
+    .spec {
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, .24);
+      min-width: 0
+    }
+
+    .spec span {
+      display: block;
+      color: rgba(255, 255, 255, .62);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .13em;
+      font-weight: 700
+    }
+
+    .spec strong {
+      display: block;
+      margin-top: 5px;
+      color: #fff;
+      font-size: 15px;
+      font-weight: 600;
+      overflow-wrap: anywhere
+    }
+
+    .spec.wide {
+      grid-column: span 2
+    }
+
+    .location-line {
+      margin-top: 15px;
+      padding-top: 12px;
+      border-top: 1px solid rgba(255, 255, 255, .24)
+    }
+
+    .location-line span {
+      display: block;
+      color: rgba(255, 255, 255, .62);
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      font-weight: 700
+    }
+
+    .location-line strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      line-height: 1.6
+    }
+
+    .carousel-controls {
+      position: absolute;
+      z-index: 3;
+      left: clamp(20px, 3vw, 42px);
+      bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: #fff;
+      font-size: 10px;
+      font-variant-numeric: tabular-nums
+    }
+
+    .carousel-button {
+      width: 38px;
+      height: 38px;
+      display: grid;
+      place-items: center;
+      border: 1px solid #ffffff99;
+      border-radius: 50%;
+      background: #07150eb3;
+      color: white;
+      font: inherit;
+      font-size: 17px;
+      cursor: pointer;
+      transition: background .2s ease, transform .2s ease
+    }
+
+    .carousel-button:hover:not(:disabled) {
+      background: var(--green);
+      transform: scale(1.06)
+    }
+
+    .carousel-button:focus-visible {
+      outline: 2px solid #a9efb9;
+      outline-offset: 3px
+    }
+
+    .carousel-button:disabled {
+      opacity: .4;
+      cursor: default
+    }
+
+    .carousel-count {
+      min-width: 44px;
+      text-align: center;
+      letter-spacing: .12em
+    }
+
+    .deployment {
+      background: var(--green-dark);
+      color: #f7f5ee;
+      padding: 76px 6vw 84px;
+      position: relative;
+      overflow: hidden
+    }
+
+    .deployment:before {
+      content: "";
+      position: absolute;
+      width: 480px;
+      height: 480px;
+      right: -180px;
+      top: -260px;
+      border: 1px solid #ffffff12;
+      border-radius: 50%;
+      box-shadow: 0 0 0 45px #ffffff08, 0 0 0 90px #ffffff05;
+      pointer-events: none
+    }
+
+    .deployment-inner {
+      max-width: 1260px;
+      margin: auto;
+      display: grid;
+      grid-template-columns: .72fr 1.28fr;
+      gap: 5vw;
+      position: relative;
+      z-index: 1
+    }
+
+    .deployment .kicker {
+      color: #a9efb9
+    }
+
+    .deployment h2 {
+      font-family: var(--serif);
+      font-size: clamp(38px, 4.5vw, 62px);
+      font-weight: 400;
+      line-height: 1;
+      margin: 14px 0 20px;
+      letter-spacing: -.04em
+    }
+
+    .deployment p {
+      color: #c5ddcb;
+      font-size: 13px;
+      line-height: 1.8;
+      max-width: 380px
+    }
+
+    .location-list {
+      border-top: 1px solid #ffffff35;
+      margin-top: 18px
+    }
+
+    .location-list:empty {
+      display: none
+    }
+
+    .location-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 90px;
+      gap: 18px;
+      padding: 18px 0;
+      border-bottom: 1px solid #ffffff35;
+      align-items: center
+    }
+
+    .location-row span {
+      font-size: 12px;
+      color: #e7eee8
+    }
+
+    .location-row small {
+      display: block;
+      color: #a9d6b2;
+      font-size: 9px;
+      text-transform: uppercase;
+      letter-spacing: .12em;
+      margin-bottom: 5px
+    }
+
+    .location-row b {
+      font-size: 14px;
+      color: #8fe0a5;
+      font-weight: 600;
+      text-align: right
+    }
+
+    .note {
+      max-width: 1260px;
+      margin: 22px auto 0;
+      color: #a9d6b2;
+      font-size: 10px
+    }
+
+    .map-column {
+      min-width: 0
+    }
+
+    .map-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 12px;
+      color: #d3e6d7;
+      font-size: 11px;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      font-weight: 700
+    }
+
+    .map-key {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      color: #b6d2bd;
+      font-size: 9px;
+      font-weight: 500;
+      letter-spacing: 0;
+      text-transform: none
+    }
+
+    .map-key-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #9cf0ae;
+      box-shadow: 0 0 12px #9cf0ae99
+    }
+
+    .map-shell {
+      min-height: 390px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid #ffffff35;
+      background: #e5eee5;
+      box-shadow: 0 20px 55px #001c0d38
+    }
+
+    #fleetMap {
+      width: 100%;
+      height: 390px;
+      background: #e5eee5
+    }
+
+    .map-empty {
+      position: absolute;
+      z-index: 500;
+      left: 50%;
+      top: 50%;
+      width: min(320px, calc(100% - 36px));
+      padding: 18px 20px;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 254, 250, .96);
+      color: #344442;
+      text-align: center;
+      box-shadow: 0 12px 35px #152b1d24;
+      pointer-events: none
+    }
+
+    .map-empty[hidden] {
+      display: none
+    }
+
+    .map-empty strong {
+      display: block;
+      color: var(--green-dark);
+      font-size: 13px
+    }
+
+    .map-empty span {
+      display: block;
+      margin-top: 6px;
+      color: #66736b;
+      font-size: 11px;
+      line-height: 1.6
+    }
+
+    .map-bubble {
+      display: grid;
+      place-items: center;
+      width: 100%;
+      height: 100%;
+      border: 2px solid rgba(255, 255, 255, .95);
+      border-radius: 50%;
+      background: rgba(0, 168, 59, .86);
+      color: white;
+      font: 800 10px/1 "DM Sans", Arial, sans-serif;
+      box-shadow: 0 3px 14px rgba(0, 44, 18, .34);
+      transition: transform .2s ease, background .2s ease
+    }
+
+    .map-bubble:hover {
+      transform: scale(1.13);
+      background: #006f2d
+    }
+
+    .leaflet-popup-content-wrapper {
+      border-radius: 2px
+    }
+
+    .depot-popup {
+      color: #344442;
+      font-family: "DM Sans", Arial, sans-serif;
+      font-size: 12px;
+      line-height: 1.55
+    }
+
+    .depot-popup strong {
+      display: block;
+      color: var(--green-dark);
+      font-size: 14px
+    }
+
+    .map-error {
+      margin: 10px 0 0;
+      color: #ffe2a8;
+      font-size: 11px
+    }
+
+    .map-error[hidden] {
+      display: none
+    }
+
+    .location-row {
+      transition: background .2s ease, padding .2s ease
+    }
+
+    .location-row[data-lat]:hover {
+      padding-right: 10px;
+      padding-left: 10px;
+      background: #ffffff0d;
+      cursor: pointer
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity .7s ease, transform .7s cubic-bezier(.2, .7, .2, 1)
+    }
+
+    .reveal.is-visible {
+      opacity: 1;
+      transform: translateY(0)
+    }
+
+    @keyframes bar-grow {
+      from { transform: scaleX(0) }
+      to { transform: scaleX(1) }
+    }
+
+    @keyframes route-photo-unfold {
+      0% {
+        clip-path: polygon(100% 0, 100% 0, 100% 100%, 100% 100%);
+        transform: scale(1.14);
+        filter: brightness(.62) saturate(.45)
+      }
+      58% {
+        clip-path: polygon(58% 0, 100% 0, 100% 100%, 12% 100%);
+        transform: scale(1.06);
+        filter: brightness(.82) saturate(.72)
+      }
+      100% {
+        clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+        transform: scale(1);
+        filter: brightness(1) saturate(1)
+      }
+    }
+
+    @keyframes route-trace {
+      to { stroke-dashoffset: 0 }
+    }
+
+    @keyframes station-arrive {
+      from { opacity: 0; transform: scale(.2) }
+      to { opacity: 1; transform: scale(1) }
+    }
+
+    @keyframes route-copy-arrive {
+      from { opacity: 0; transform: translateY(22px); filter: blur(7px) }
+      to { opacity: 1; transform: translateY(0); filter: blur(0) }
+    }
+
+    @keyframes fleet-number-arrive {
+      from { opacity: 0; transform: scale(.72); filter: blur(8px) }
+      to { opacity: 1; transform: scale(1); filter: blur(0) }
+    }
+
+    .footer {
+      max-width: 1380px;
+      margin: auto;
+      padding: 26px 6vw;
+      text-align: center;
+      color: #7b8581;
+      font-size: 11px
+    }
+
+    .footer a {
+      margin-left: 4px;
+      color: var(--green-dark);
+      font-weight: 700;
+      text-decoration: none
+    }
+
+    .footer a:hover {
+      text-decoration: underline
+    }
+
+    .footer a:focus-visible {
+      outline: 2px solid var(--green);
+      outline-offset: 3px
+    }
+
+    @media(max-width:1100px) and (min-width:851px) {
+      .bus-entry {
+        min-height: 0
+      }
+    }
+
+    @media(max-width:850px) {
+      .hero {
+        min-height: 740px;
+        padding: 0 5vw
+      }
+
+      .hero > div:first-child {
+        padding: 54px 0
+      }
+
+      .hero-visual img {
+        object-position: 58% center
+      }
+
+      .hero-photo-controls {
+        right: 5vw
+      }
+
+      .visual-caption {
+        right: 5vw
+      }
+
+      .bus-entry {
+        min-height: 760px;
+        aspect-ratio: auto
+      }
+
+      .bus-carousel {
+        min-height: 760px
+      }
+
+      .image-title {
+        right: 24px;
+        width: 55%;
+        max-height: calc(100% - 100px);
+        padding-left: 18px
+      }
+
+      .image-index {
+        left: 24px
+      }
+
+      .carousel-controls {
+        left: 24px;
+        bottom: 24px
+      }
+
+      .deployment-inner {
+        grid-template-columns: 1fr;
+        gap: 35px
+      }
+
+      #fleetMap {
+        height: 340px
+      }
+
+      .map-shell {
+        min-height: 340px
+      }
+    }
+
+    @media(max-width:560px) {
+      .nav {
+        padding: 18px 20px
+      }
+
+      .navlinks {
+        gap: 14px;
+        font-size: 10px
+      }
+
+      .navlinks a:first-child {
+        display: none
+      }
+
+      .hero {
+        min-height: 820px;
+        padding: 0 22px
+      }
+
+      .hero > div:first-child {
+        padding: 48px 0 88px
+      }
+
+      .hero-meta {
+        gap: 22px
+      }
+
+      .hero-photo-controls {
+        right: auto;
+        left: 22px;
+        bottom: 20px
+      }
+
+      .visual-caption {
+        right: 22px;
+        bottom: 31px
+      }
+
+      .hero-actions {
+        gap: 8px
+      }
+
+      .hero-link {
+        min-height: 42px;
+        padding: 0 12px;
+        gap: 8px;
+        font-size: 10px
+      }
+
+      .hero-stat {
+        padding: 17px
+      }
+
+      .section-head {
+        padding: 35px 22px 20px;
+        display: block
+      }
+
+      .section-intro {
+        margin-top: 12px
+      }
+
+      .fleet {
+        padding: 0 16px 55px
+      }
+
+      .bus-entry {
+        min-height: 900px
+      }
+
+      .bus-carousel {
+        min-height: 900px
+      }
+
+      .image-index {
+        top: 18px;
+        left: 18px
+      }
+
+      .image-title {
+        top: auto;
+        right: 0;
+        bottom: 0;
+        width: 100%;
+        max-height: 75%;
+        padding: 28px 20px 82px;
+        background: linear-gradient(180deg, transparent 0%, rgba(5, 15, 10, .88) 16%, rgba(5, 15, 10, .97) 100%);
+        transform: none
+      }
+
+      .image-title h3 {
+        font-size: 34px
+      }
+
+      .image-title .bus-summary {
+        font-size: 12px;
+        margin: 9px 0 14px
+      }
+
+      .carousel-controls {
+        left: 20px;
+        bottom: 20px
+      }
+
+      .specs {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px 14px
+      }
+
+      .spec strong {
+        font-size: 13px
+      }
+
+      .spec span {
+        font-size: 8px
+      }
+
+      .deployment {
+        padding: 55px 22px
+      }
+
+      .location-row {
+        grid-template-columns: 1fr 1fr 48px;
+        gap: 8px
+      }
+
+      #fleetMap {
+        height: 300px
+      }
+
+      .map-shell {
+        min-height: 300px
+      }
+
+      .footer {
+        padding: 22px;
+        display: block
+      }
+
+      .footer span {
+        display: block;
+        margin: 6px 0
+      }
+    }
+
+    @media(prefers-reduced-motion: reduce) {
+      *, *:before, *:after {
+        scroll-behavior: auto !important;
+        animation-delay: 0s !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important
+      }
+    }
+  </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+    integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+</head>
+
+<body>
+  <div class="topline"></div>
+  <div class="reading-progress" aria-hidden="true"></div>
+  <header class="nav">
+    <a class="identity" href="#">
+      <img class="identity-logo" src="images/tgsrtc-logo.png" alt="TGSRTC logo">
+      <span class="identity-copy">TGSRTC<small>ELECTRIC BUS FLEET</small></span>
+    </a>
+    <nav class="navlinks"><a href="#fleet">The fleet</a><a href="#deployment">Deployment</a></nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <div class="kicker">A changing landscape of public transport</div>
+        <h1>Moving towards<br><em>electric.</em></h1>
+        <p class="hero-copy">An overview of TGSRTC’s electric bus fleet — the vehicles, their passenger facilities and
+          the locations they serve.</p>
+        <div class="hero-stat" aria-label="534 electric buses out of a total fleet of 3,219 buses">
+          <strong class="hero-stat-number">534</strong>
+          <div class="hero-stat-label">electric buses<span>out of 3,219 buses in the total fleet</span></div>
+          <div class="fleet-share" role="img" aria-label="Electric buses are 16.6 percent of the total fleet"><span></span></div>
+        </div>
+        <div class="hero-actions">
+          <a class="hero-link" href="#fleet">Explore the fleet <span aria-hidden="true">↘</span></a>
+          <a class="hero-link secondary" href="#deployment">View EV depots <span aria-hidden="true">↘</span></a>
+        </div>
+        <div class="hero-meta">
+          <div><span class="meta-label">Fleet profile</span><span class="meta-value">Electric buses</span></div>
+          <div><span class="meta-label">Coverage</span><span class="meta-value">Hyderabad</span></div>
+          <div><span class="meta-label">Information</span><span class="meta-value">Vehicle-wise</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <img src="images/hero-bus.jpg" alt="TGSRTC electric bus">
+        <div class="visual-caption">TGSRTC · Electric mobility</div>
+      </div>
+      <svg class="hero-route" viewBox="0 0 1600 760" preserveAspectRatio="none" aria-hidden="true">
+        <path class="hero-route-line" pathLength="1"
+          d="M 690 720 C 760 600 1000 680 930 500 S 850 270 1120 310 S 1320 520 1410 350 S 1510 190 1600 170" />
+        <g>
+          <circle class="hero-route-station" cx="760" cy="620" r="7" />
+          <circle class="hero-route-station" cx="930" cy="500" r="7" />
+          <circle class="hero-route-station" cx="1105" cy="310" r="7" />
+          <circle class="hero-route-station" cx="1390" cy="380" r="7" />
+          <circle class="hero-route-station" cx="1560" cy="180" r="9" />
+        </g>
+      </svg>
+      <div class="hero-photo-controls" id="heroPhotoControls" aria-label="Landing photo controls" hidden>
+        <button class="carousel-button" type="button" data-hero-direction="-1" aria-label="Previous landing photo">‹</button>
+        <span id="heroPhotoCount" aria-live="polite"></span>
+        <button class="carousel-button" type="button" data-hero-direction="1" aria-label="Next landing photo">›</button>
+      </div>
+    </section>
+
+    <section id="fleet">
+      <div class="section-head">
+        <div>
+          <div class="kicker">01 / The vehicles</div>
+          <h2>Inside the fleet.</h2>
+        </div>
+        <p class="section-intro">A closer look at the electric bus models in operation, with key dimensions, passenger
+          capacity and technical information.</p>
+      </div>
+      <div class="fleet" id="fleetEntries"></div>
+    </section>
+
+    <section class="deployment" id="deployment">
+      <div class="deployment-inner">
+        <div>
+          <div class="kicker">02 / Where they operate</div>
+          <h2>On the road<br>across Telangana.</h2>
+          <p>Explore the six depots operating TGSRTC’s electric buses. Each marker shows the EV fleet count at that location.</p>
+        </div>
+        <div class="map-column">
+          <div class="map-heading"><span id="depotSummary">Electric bus depots</span><span class="map-key"><i class="map-key-dot"></i>Marker size reflects fleet count</span></div>
+          <div class="map-shell">
+            <div id="fleetMap" role="application" aria-label="Map of electric bus depots in Telangana"></div>
+            <div class="map-empty" id="mapEmpty"><strong>Add verified depot locations</strong><span>Enter each depot’s name, electric bus count and coordinates in the deployments list below.</span></div>
+          </div>
+          <p class="map-error" id="mapError" role="status" hidden></p>
+          <div class="location-list" id="locationList" aria-label="Electric bus depots"></div>
+        </div>
+      </div>
+      
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>Developed by <a href="https://x.com/TheKannadiga_RF" target="_blank" rel="noopener noreferrer">Amogh A</a></span>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+    integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script>
+    /*
+      CONTENT EDITING
+      1. Add photographs to the images folder.
+      2. Update the image filenames below.
+      3. Replace all sample text with verified details.
+      4. Copy a bus object to add another model.
+      5. Add depot coordinates and electric bus counts to deployments below.
+    */
+    const buses = [
+      {
+        number: "01",
+        photoPrefix: "green-city-ordinary",
+        images: ["images/green-city-ordinary-1.jpg"],
+        name: "Green City Ordinary",
+        summary: "Add a short description of this bus model. Mention its intended service, distinguishing features or procurement batch.",
+        length: "12 metres",
+        seating: "35 seats",
+        totalCapacity: "55",
+        airConditioning: "Non-AC",
+        locations: "Enter operational depots / cities"
+      },
+      {
+        number: "02",
+        photoPrefix: "green-metro-express",
+        images: ["images/green-metro-express-1.jpg"],
+        name: "Green Metro Express",
+        summary: "Add a short description of this bus model. Keep this to one or two sentences for a clean presentation.",
+        length: "—",
+        seating: "—",
+        totalCapacity: "—",
+        airConditioning: "—",
+        locations: "Enter operational depots / cities"
+      },
+      {
+        number: "03",
+        photoPrefix: "pushpak",
+        images: ["images/pushpak-1.jpg", "images/pushpak-2.jpg"],
+        name: "Pushpak AC Airport Bus",
+        summary: "Add a short description of this bus model. Keep this to one or two sentences for a clean presentation.",
+        length: "—",
+        seating: "—",
+        totalCapacity: "—",
+        airConditioning: "—",
+        locations: "Enter operational depots / cities"
+      },
+      {
+        number: "04",
+        photoPrefix: "green-metro-luxury",
+        images: ["images/green-metro-luxury-1.jpg", "images/green-metro-luxury-2.jpg"],
+        name: "Metro Luxury AC",
+        summary: "Add a short description of this bus model. Keep this to one or two sentences for a clean presentation.",
+        length: "—",
+        seating: "—",
+        totalCapacity: "—",
+        airConditioning: "—",
+        locations: "Enter operational depots / cities"
+      }
+    ];
+
+    const deployments = [
+      { location: "Cantonment", code: "CNT", buses: 83, lat: 17.4468, lon: 78.4985 },
+      { location: "HCU", code: "HCU", buses: 106, lat: 17.4668, lon: 78.3301 },
+      { location: "Hayathnagar 2", code: "HYT2", buses: 101, lat: 17.3249, lon: 78.5943 },
+      { location: "Kukatpally", code: "KP", buses: 60, lat: 17.4734, lon: 78.4259 },
+      { location: "Miyapur 2", code: "MYP2", buses: 103, lat: 17.5124, lon: 78.3604 },
+      { location: "Ranigunj 2", code: "RNG2", buses: 81, lat: 17.4324, lon: 78.4864 }
+    ];
+
+    const maxPhotosPerBus = 50;
+
+    async function imageExists(source) {
+      if (location.protocol !== "file:") {
+        try {
+          const response = await fetch(source, { method: "HEAD" });
+          if (response.status !== 405 && response.status !== 501) {
+            return response.ok;
+          }
+        } catch (error) {
+          console.warn(`Could not check for numbered bus photo ${source}.`, error);
+          return false;
+        }
+      }
+
+      return new Promise(resolve => {
+        const image = new Image();
+        image.onload = () => resolve(true);
+        image.onerror = () => resolve(false);
+        image.src = source;
+      });
+    }
+
+    async function discoverNumberedPhotos(prefix) {
+      const photos = [];
+      for (let number = 1; number <= maxPhotosPerBus; number++) {
+        const source = `images/${prefix}-${number}.jpg`;
+        if (!(await imageExists(source))) {
+          break;
+        }
+        photos.push(source);
+      }
+      return photos;
+    }
+
+    async function initializeLandingPhotos() {
+      const photos = await discoverNumberedPhotos("landing-hero");
+      if (!photos.length) {
+        return;
+      }
+
+      const image = document.querySelector(".hero-visual img");
+      const controls = document.getElementById("heroPhotoControls");
+      const counter = document.getElementById("heroPhotoCount");
+      const buttons = controls.querySelectorAll("[data-hero-direction]");
+      let activeIndex = 0;
+      let isChanging = false;
+
+      image.src = photos[activeIndex];
+      image.alt = `TGSRTC electric bus, landing photo 1 of ${photos.length}`;
+      controls.hidden = photos.length < 2;
+      counter.textContent = `01 / ${String(photos.length).padStart(2, "0")}`;
+
+      buttons.forEach(button => {
+        button.addEventListener("click", () => {
+          if (isChanging) {
+            return;
+          }
+          activeIndex = (activeIndex + Number(button.dataset.heroDirection) + photos.length) % photos.length;
+          counter.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(photos.length).padStart(2, "0")}`;
+          const updateImage = () => {
+            image.src = photos[activeIndex];
+            image.alt = `TGSRTC electric bus, landing photo ${activeIndex + 1} of ${photos.length}`;
+            image.classList.remove("is-fading");
+            isChanging = false;
+          };
+
+          if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+            updateImage();
+          } else {
+            isChanging = true;
+            image.classList.add("is-fading");
+            window.setTimeout(updateImage, 450);
+          }
+        });
+      });
+    }
+
+    const landingPhotoRender = initializeLandingPhotos();
+
+    async function renderFleet() {
+      await Promise.all(buses.map(async bus => {
+        const numberedPhotos = await discoverNumberedPhotos(bus.photoPrefix);
+        if (numberedPhotos.length) {
+          bus.images = numberedPhotos;
+        }
+      }));
+
+      document.getElementById("fleetEntries").innerHTML = buses.map(bus => {
+        const images = bus.images || [bus.image];
+        return `
+        <article class="bus-entry">
+          <div class="bus-carousel" aria-label="${bus.name} photos">
+            ${images.map((image, index) => `
+              <div class="bus-slide${index === 0 ? " is-active" : ""}" aria-hidden="${index !== 0}">
+                <img src="${image}" alt="${bus.name} — photo ${index + 1}">
+              </div>
+            `).join("")}
+            <span class="image-index">TGSRTC / ${bus.number}</span>
+            <div class="carousel-controls" aria-label="Photo controls for ${bus.name}">
+              <button class="carousel-button" type="button" data-direction="-1" aria-label="Previous photo of ${bus.name}"${images.length < 2 ? " disabled" : ""}>‹</button>
+              <span class="carousel-count" aria-live="polite">01 / ${String(images.length).padStart(2, "0")}</span>
+              <button class="carousel-button" type="button" data-direction="1" aria-label="Next photo of ${bus.name}"${images.length < 2 ? " disabled" : ""}>›</button>
+            </div>
+          </div>
+          <div class="image-title">
+            <h3>${bus.name}</h3>
+            <p class="bus-summary">${bus.summary}</p>
+            <div class="specs">
+              <div class="spec"><span>Bus length</span><strong>${bus.length}</strong></div>
+              <div class="spec"><span>Seating capacity</span><strong>${bus.seating}</strong></div>
+              <div class="spec"><span>Total passenger capacity</span><strong>${bus.totalCapacity}</strong></div>
+              <div class="spec"><span>Air conditioning</span><strong>${bus.airConditioning}</strong></div>
+            </div>
+            <div class="location-line"><span>Operational locations</span><strong>${bus.locations}</strong></div>
+          </div>
+        </article>
+        `;
+      }).join("");
+
+      document.querySelectorAll(".bus-entry").forEach(entry => {
+        const slides = Array.from(entry.querySelectorAll(".bus-slide"));
+        const counter = entry.querySelector(".carousel-count");
+        let activeIndex = 0;
+
+        entry.querySelectorAll(".carousel-button").forEach(button => {
+          button.addEventListener("click", () => {
+            slides[activeIndex].classList.remove("is-active");
+            slides[activeIndex].setAttribute("aria-hidden", "true");
+            activeIndex = (activeIndex + Number(button.dataset.direction) + slides.length) % slides.length;
+            slides[activeIndex].classList.add("is-active");
+            slides[activeIndex].setAttribute("aria-hidden", "false");
+            counter.textContent = `${String(activeIndex + 1).padStart(2, "0")} / ${String(slides.length).padStart(2, "0")}`;
+          });
+        });
+      });
+    }
+
+    const fleetRender = renderFleet();
+
+    const mapElement = document.getElementById("fleetMap");
+    const mapEmpty = document.getElementById("mapEmpty");
+    const mapError = document.getElementById("mapError");
+    const locationList = document.getElementById("locationList");
+
+    if (typeof L === "undefined") {
+      mapError.hidden = false;
+      mapError.textContent = "The map library could not be loaded. Check your internet connection and reload.";
+    } else {
+      const map = L.map(mapElement, { scrollWheelZoom: false }).setView([17.8, 79.0], 7);
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 18,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      const validDeployments = [];
+      const invalidDeployments = [];
+      deployments.forEach((item, index) => {
+        const valid = typeof item.location === "string" && item.location.trim().length > 0 &&
+          Number.isFinite(item.lat) && Number.isFinite(item.lon) &&
+          item.lat >= -90 && item.lat <= 90 && item.lon >= -180 && item.lon <= 180 &&
+          Number.isFinite(item.buses) && item.buses >= 0;
+        if (valid) {
+          validDeployments.push({ item, index });
+        } else {
+          invalidDeployments.push(index);
+          console.error(`Invalid depot data at deployments[${index}]. Add a depot name, valid lat/lon and a numeric buses value.`);
+        }
+      });
+
+      if (validDeployments.length) {
+        mapEmpty.hidden = true;
+        const totalBuses = validDeployments.reduce((total, { item }) => total + item.buses, 0);
+        document.getElementById("depotSummary").textContent =
+          `${validDeployments.length} depots · ${totalBuses.toLocaleString("en-IN")} EV buses`;
+        const markers = new Map();
+        locationList.innerHTML = validDeployments.map(({ item, index }) => `
+          <div class="location-row" data-lat="${item.lat}" data-lon="${item.lon}" data-index="${index}" tabindex="0" role="button" aria-label="Show ${item.location} on map">
+            <span><small>Depot</small>${item.location}</span>
+            <span><small>Depot code</small>${item.code || "—"}</span>
+            <b aria-label="${item.buses} electric buses"><small>Fleet EV</small>${item.buses}</b>
+          </div>
+        `).join("");
+
+        const busCounts = validDeployments.map(({ item }) => item.buses);
+        const minBusCount = Math.min(...busCounts);
+        const maxBusCount = Math.max(...busCounts);
+        validDeployments.forEach(({ item, index }) => {
+          const diameter = maxBusCount === minBusCount
+            ? 55
+            : Math.round(38 + ((item.buses - minBusCount) / (maxBusCount - minBusCount)) * 34);
+          const icon = L.divIcon({
+            className: "",
+            html: `<span class="map-bubble">${item.buses}</span>`,
+            iconSize: [diameter, diameter],
+            iconAnchor: [diameter / 2, diameter / 2]
+          });
+          const marker = L.marker([item.lat, item.lon], { icon }).addTo(map);
+          marker.bindPopup(`<div class="depot-popup"><strong>${item.location}</strong>${item.code ? `${item.code}<br>` : ""}${item.buses} electric buses<br>${item.lat.toFixed(4)}, ${item.lon.toFixed(4)}</div>`);
+          markers.set(index, marker);
+        });
+
+        if (invalidDeployments.length) {
+          mapError.hidden = false;
+          mapError.textContent = `${invalidDeployments.length} depot entr${invalidDeployments.length === 1 ? "y was" : "ies were"} skipped. Check the console for missing names, invalid coordinates or bus counts.`;
+        }
+
+        const markerGroup = L.featureGroup(Array.from(markers.values()));
+        if (markers.size === 1) {
+          map.setView(markerGroup.getBounds().getCenter(), 11);
+        } else {
+          map.fitBounds(markerGroup.getBounds().pad(0.18), { maxZoom: 11 });
+        }
+
+        locationList.querySelectorAll(".location-row").forEach(row => {
+          const focusMarker = () => {
+            const marker = markers.get(Number(row.dataset.index));
+            map.flyTo(marker.getLatLng(), Math.max(map.getZoom(), 11), { duration: 0.8 });
+            marker.openPopup();
+          };
+          row.addEventListener("click", focusMarker);
+          row.addEventListener("keydown", event => {
+            if (event.key === "Enter" || event.key === " ") {
+              event.preventDefault();
+              focusMarker();
+            }
+          });
+        });
+      } else if (deployments.length) {
+        mapError.hidden = false;
+        mapError.textContent = "No depots could be plotted. Check that each entry has a name, valid latitude and longitude, and a numeric bus count.";
+      }
+    }
+
+    const revealTargets = document.querySelectorAll(".hero > div, .section-head, .deployment-inner, .footer");
+    revealTargets.forEach(target => target.classList.add("reveal"));
+    let revealObserver = null;
+    if ("IntersectionObserver" in window) {
+      revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("is-visible");
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      revealTargets.forEach(target => revealObserver.observe(target));
+    } else {
+      revealTargets.forEach(target => target.classList.add("is-visible"));
+    }
+
+    fleetRender.then(() => {
+      document.querySelectorAll(".bus-entry").forEach(target => {
+        target.classList.add("reveal");
+        if (revealObserver) {
+          revealObserver.observe(target);
+        } else {
+          target.classList.add("is-visible");
+        }
+      });
+    }).catch(error => {
+      console.error("Could not load the bus photo carousels.", error);
+      document.getElementById("fleetEntries").textContent = "Bus photo carousels could not be loaded.";
+    });
+
+    landingPhotoRender.catch(error => {
+      console.error("Could not load the landing photo carousel.", error);
+    });
+
+    const progressBar = document.querySelector(".reading-progress");
+    let ticking = false;
+    window.addEventListener("scroll", () => {
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrollable = document.documentElement.scrollHeight - window.innerHeight;
+          progressBar.style.width = `${scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0}%`;
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    document.querySelectorAll(".navlinks a").forEach(link => {
+      link.addEventListener("click", () => {
+        document.querySelectorAll(".navlinks a").forEach(item => item.classList.remove("active"));
+        link.classList.add("active");
+      });
+    });
+  </script>
+</body>
+
+</html>
