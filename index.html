@@ -145,6 +145,7 @@
     .hero h1,
     .hero-copy,
     .hero-stat,
+    .hero-incoming,
     .hero-actions,
     .hero-meta {
       animation: route-copy-arrive .78s both cubic-bezier(.16, 1, .3, 1)
@@ -154,8 +155,9 @@
     .hero h1 { animation-delay: .58s }
     .hero-copy { animation-delay: .74s }
     .hero-stat { animation-delay: .9s }
-    .hero-actions { animation-delay: 1.08s }
-    .hero-meta { animation-delay: 1.22s }
+    .hero-incoming { animation-delay: 1.04s }
+    .hero-actions { animation-delay: 1.18s }
+    .hero-meta { animation-delay: 1.32s }
 
     .kicker {
       font-size: 10px;
@@ -229,6 +231,57 @@
       color: rgba(255, 255, 255, .72);
       font-size: 11px;
       font-weight: 500
+    }
+
+    .hero-incoming {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      width: min(100%, 480px);
+      margin-top: 12px;
+      padding: 10px 14px;
+      border-left: 3px solid #b9f486;
+      background: rgba(5, 37, 21, .64);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, .12);
+      backdrop-filter: blur(8px)
+    }
+
+    .hero-incoming-symbol {
+      color: #b9f486;
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1
+    }
+
+    .hero-incoming-copy {
+      display: flex;
+      flex: 1;
+      flex-direction: column;
+      gap: 3px;
+      min-width: 0
+    }
+
+    .hero-incoming-copy strong {
+      color: white;
+      font-family: var(--serif);
+      font-size: 23px;
+      font-weight: 400;
+      line-height: 1
+    }
+
+    .hero-incoming-copy span {
+      color: rgba(255, 255, 255, .76);
+      font-size: 10px;
+      line-height: 1.4
+    }
+
+    .hero-incoming-label {
+      flex: 0 0 auto;
+      color: #b9f486;
+      font-size: 8px;
+      font-weight: 800;
+      letter-spacing: .14em;
+      text-transform: uppercase
     }
 
     .fleet-share {
@@ -1263,6 +1316,11 @@
           <div class="hero-stat-label">electric buses<span>out of 3,219 buses in the total fleet</span></div>
           <div class="fleet-share" role="img" aria-label="Electric buses are 16.6 percent of the total fleet"><span></span></div>
         </div>
+        <div class="hero-incoming" role="note">
+          <span class="hero-incoming-symbol" aria-hidden="true">+</span>
+          <div class="hero-incoming-copy"><strong>2,000</strong><span>buses joining the TGSRTC fleet</span></div>
+          <span class="hero-incoming-label">Upcoming</span>
+        </div>
         <div class="hero-actions">
           <a class="hero-link" href="#fleet">Explore the fleet <span aria-hidden="true">↘</span></a>
           <a class="hero-link secondary" href="#deployment">View EV depots <span aria-hidden="true">↘</span></a>
@@ -1311,7 +1369,7 @@
       <div class="deployment-inner">
         <div>
           <div class="kicker">02 / Where they operate</div>
-          <h2>On the road<br>across Telangana.</h2>
+          <h2>On the road<br>across Hyderabad.</h2>
           <p>Explore the six depots operating TGSRTC’s electric buses. Each marker shows the EV fleet count at that location.</p>
         </div>
         <div class="map-column">
